@@ -1,0 +1,19 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": [
+            "es2017",
+            "dom",
+            "scripthost"
+        ],
+        "downlevelIteration": true,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true
+    },
+    "files": [
+        "main.ts"
+    ]
+}
