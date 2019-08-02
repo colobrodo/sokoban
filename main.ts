@@ -64,18 +64,9 @@ class Grid {
     }
 
     isComplete() {
-        let goals = this.goals.values();
-        
-        for(const coord of goals) {
-            // asserting on raw coordinate
-
-            const goal = this.cells[coord];
-            
-            if(goal != "box") {
-                return false;
-            }
-        }
-        return true;
+        return Array.from(this.goals)
+            .map(coord => this.cells[coord])
+            .every(goal => goal == "box");
     }
 
     private tryMove(position: Vec2, direction: Direction): boolean {
@@ -287,7 +278,11 @@ function render() {
         context.stroke();
     }
 
-    requestAnimationFrame(render);
+    if(grid.isComplete()) {
+        console.log("level complete!");
+    }
+    
+        requestAnimationFrame(render);
 }
 
 canvas.width  = window.innerWidth;
