@@ -220,10 +220,17 @@ document.addEventListener("keyup", (event) => {
     }
 });
 
-function createTile(src: string) {
-    const img = new Image();
-    img.src = src;
-    return img;
+function createTile(src: string): Promise<HTMLImageElement> {
+    return new Promise( (resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        if(img.complete) {
+           resolve(img)
+        } else {
+           img.addEventListener('load', () => resolve(img));
+           img.addEventListener('error', error => reject(error));
+        }
+    });
 }
 
 const tiles = {
@@ -237,55 +244,82 @@ const tiles = {
 
 
 const cellSize = 35;
-function render() {
-    const {x: playerX, y: playerY} = grid.playerPosition;
-    context.clearRect(0, 0, canvas.width, canvas.height);
+function createRenderer(tiles: { [key: string]: HTMLImageElement}) {
+    return function render() {
+        const {x: playerX, y: playerY} = grid.playerPosition;
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
-    for(const {x, y, type, isAGoal} of grid.enumerate()) {
-        let tile: HTMLImageElement | null = null;
-        if (type == "wall") {
-            tile = tiles.wall;       
-        }
-        else if (type == "box") {
-            if(isAGoal) {
-                tile = tiles.boxOnGoal;       
-            } else {
-                tile = tiles.box;       
+        for(const {x, y, type, isAGoal} of grid.enumerate()) {
+            let tile: HTMLImageElement | null = null;
+            if (type == "wall") {
+                tile = tiles.wall;       
             }
-        }
-        else if (type == "empty") {
-            if(playerX === x && playerY === y) {
+            else if (type == "box") {
                 if(isAGoal) {
-                    tile = tiles.playerOnAGoal;
+                    tile = tiles.boxOnGoal;       
                 } else {
-                    tile = tiles.player;
+                    tile = tiles.box;       
                 }
-
-
-            } else if(isAGoal) {
-                tile = tiles.goal;
-            } 
-            else {
-                context.fillStyle = "#000";
-                context.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
             }
+            else if (type == "empty") {
+                if(playerX === x && playerY === y) {
+                    if(isAGoal) {
+                        tile = tiles.playerOnAGoal;
+                    } else {
+                        tile = tiles.player;
+                    }
+
+
+                } else if(isAGoal) {
+                    tile = tiles.goal;
+                } 
+                else {
+                    context.fillStyle = "#000";
+                    context.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                }
+            }
+
+            if(tile != null) {
+                context.drawImage(tile, x * cellSize, y * cellSize, cellSize, cellSize);
+            }
+
+            context.stroke();
         }
 
-        if(tile != null) {
-            context.drawImage(tile, x * cellSize, y * cellSize, cellSize, cellSize);
+        if(grid.isComplete()) {
+            console.log("level complete!");
         }
-
-        context.stroke();
+        
+            requestAnimationFrame(render);
     }
-
-    if(grid.isComplete()) {
-        console.log("level complete!");
-    }
-    
-        requestAnimationFrame(render);
 }
 
 canvas.width  = window.innerWidth;
 canvas.height = window.innerHeight;
 
-render();
+async function main() {
+    
+    // ouch!!!
+    const tiles = await Promise.all([
+        createTile("/img/wall.png"),
+        createTile("/img/goal.png"),
+        createTile("/img/player.png"),
+        createTile("/img/player-on-goal.png"),
+        createTile("/img/box.png"),
+        createTile("/img/box-on-goal.png"),
+    ])
+        .then(([ wall, goal, player, playerOnAGoal, box, boxOnGoal]) => ({
+            wall, 
+            goal, 
+            player, 
+            playerOnAGoal, 
+            box, 
+            boxOnGoal
+        }));
+        
+    const render = createRenderer(tiles);
+    
+    render();
+}
+
+main();
