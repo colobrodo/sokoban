@@ -34,24 +34,20 @@ class Grid {
             }    
         }
 
-    get({x, y}: Vec2) {
-        // check boundaries
-        const index = y * this.width + x; 
+    get(pos: Vec2) {
+        this.assert_valid_index(pos);
+
+        const {x, y} = pos,
+            index = y * this.width + x; 
         return this.cells[index];
     }
 
-    private set({x, y}: Vec2, cell: Cell) {
-        // check boundaries
-        const index = y * this.width + x; 
+    private set(pos: Vec2, cell: Cell) {
+        this.assert_valid_index(pos);
+
+        const {x, y} = pos,
+            index = y * this.width + x; 
         this.cells[index] = cell;
-    }
-
-    private isAGoal(spot: Vec2): boolean {
-        this.assert_valid_index(spot);
-
-        const {x, y} = spot;
-        const index = y * this.width + x;
-        return this.goals.has(index)
     }
 
     enumerate() {
@@ -62,7 +58,7 @@ class Grid {
                 type: cell,
                 x,
                 y,
-                isAGoal: this.isAGoal({x, y}) 
+                isAGoal: this.goals.has(i), 
             };
         });
     }
@@ -114,7 +110,6 @@ class Grid {
 }
 
 
-//TODO: rewrite method
 function parseLevel(level: string): Grid {
     let cells: Cell[] = [],
         goals: Vec2[] = [],
