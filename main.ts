@@ -56,7 +56,7 @@ class Grid {
 
     enumerate() {
         return this.cells.map((cell, i) => {
-            let x = i % this.width,
+            const x = i % this.width,
                 y = (i - x) / this.width;
             return {
                 type: cell,
@@ -83,7 +83,7 @@ class Grid {
     }
 
     private tryMove(position: Vec2, direction: Direction): boolean {
-        let currentCell = this.get(position)
+        const currentCell = this.get(position)
         switch(currentCell) {
             case "wall": {
                 return false;
@@ -92,8 +92,8 @@ class Grid {
                 return true;
             }
             case "box": {
-                let nextDirection = direction(position);
-                let success = this.tryMove(nextDirection, direction);
+                const nextDirection = direction(position),
+                    success = this.tryMove(nextDirection, direction);
                 if(success) {
                     this.set(nextDirection, currentCell);
                 }
@@ -103,7 +103,7 @@ class Grid {
     }
 
     movePlayer(direction: Direction) {
-        let playerNextStep = direction(this.playerPosition);
+        const playerNextStep = direction(this.playerPosition);
         if(this.tryMove(playerNextStep, direction)) {
             this.set(playerNextStep, "empty");
             this.playerPosition = playerNextStep;
@@ -117,11 +117,11 @@ class Grid {
 //TODO: rewrite method
 function parseLevel(level: string): Grid {
     let cells: Cell[] = [],
-    goals: Vec2[] = [],
-    player_pos: Vec2 | null = null;
+        goals: Vec2[] = [],
+        player_pos: Vec2 | null = null;
     
     const lines = level.split("\n"),
-    width = lines
+        width = lines
         .map(line => line.length)
         .reduce((a, b) => Math.max(a, b), -Infinity);
     
@@ -134,8 +134,8 @@ function parseLevel(level: string): Grid {
         }
         
         for(let j = 0; j < row.length; j += 1) {
-            let cell = row[j],
-            blockPosition = {x: j, y: i};
+            const cell = row[j],
+                blockPosition = {x: j, y: i};
             
             switch(cell) {
                 case "#": {
@@ -143,26 +143,26 @@ function parseLevel(level: string): Grid {
                     break;
                 }
                 case "*": 
-                goals.push(blockPosition); 
+                    goals.push(blockPosition); 
                 case "$": {
                     cells.push("box");
                     break;
                 }
                 case ".": 
-                goals.push(blockPosition); 
+                    goals.push(blockPosition); 
                 case " ": {
                     cells.push("empty");
                     break;
                 }
                 case "+": 
-                goals.push(blockPosition); 
+                    goals.push(blockPosition); 
                 case "@": {
                     cells.push("empty");
                     
                     if(player_pos == null) {
                         player_pos = blockPosition;
                     } else {
-                        let error_message = `ERROR: error while parsing the level, a position for the player was setted two times, first in (${player_pos.x},${player_pos.y}) and then in (${blockPosition.x},${blockPosition.y}), only one allowed.`;
+                        const error_message = `ERROR: error while parsing the level, a position for the player was setted two times, first in (${player_pos.x},${player_pos.y}) and then in (${blockPosition.x},${blockPosition.y}), only one allowed.`;
                         throw new Error(error_message);
                     }
                     
@@ -173,7 +173,7 @@ function parseLevel(level: string): Grid {
     }
     
     if(player_pos == null) {
-        let error_message = "ERROR: malformed level: you have to set a position for the player, no position has been provided";
+        const error_message = "ERROR: malformed level: you have to set a position for the player, no position has been provided";
         throw new Error(error_message);        
     }
     
