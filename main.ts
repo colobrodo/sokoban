@@ -183,8 +183,8 @@ const simpleLevel: string =
 #.$*#
 # $@#
 ##  #
-#####`,
-    grid = parseLevel(simpleLevel);
+#####`;
+let grid = parseLevel(simpleLevel);
 
 const canvas = <HTMLCanvasElement> document.getElementById("canvas"),
     context = canvas.getContext("2d");
@@ -305,7 +305,15 @@ async function main() {
             box, 
             boxOnGoal
         }));
-        
+    
+    const levels = await fetch("./levels.json")
+        .then(res => res.json());
+    
+    // skip "#" in the level name
+    const name = window.location.hash.slice(1),
+        level = name in levels ? levels[name] : levels["default"];
+    grid = parseLevel(level);
+
     const render = createRenderer(tiles);
     
     render();
