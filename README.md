@@ -8,6 +8,7 @@ Simple clone of sokoban game written in typescript
   - [Table of contents](#table-of-contents)
   - [Prerequisites](#prerequisites)
   - [Getting started](#getting-started)
+  - [Modify levels](#modify-levels)
   - [Screenshot](#screenshot)
 
 ## Prerequisites
@@ -34,7 +35,15 @@ And start a webserver in the folder!
     python -m SimpleHTTPServer 8080
     python3 -m http.server 8080 #if you have python3
 
-Then head into the browser and type `localhost:8080` to play Sokoban! :tada:
+Then head into the browser and type `localhost:8080#level_name` to play Sokoban! :tada:
+
+## Modify levels
+
+If you want to add, modify or delete some levels you need to edit the `levels.json` file.
+The file is a list of `"level_name": "level_data"`, key value pair in json format.
+The level data is encoded according to [this](http://www.sokobano.de/wiki/index.php?title=Level_format) encoding.
+
+  Note: you need to put \n instead of the new line in the middle of level data cause the spec of json format doesn't support them ( [json format](https://www.json.org/))
 
 ## Screenshot
 
