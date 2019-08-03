@@ -14,8 +14,8 @@ Simple clone of sokoban game written in typescript
 
 - [Typescript](https://www.typescriptlang.org/) installed
 - A browser to run the game (Chrome/Firefox recommended)
-- A simple Web Server, I use the python http module 
-  - [Python/Python3](https://www.python.org/downloads/) installed
+- A simple Web Server, I use the python http module but you can use whatever you want! 
+  - [Python/Python3](https://www.python.org/downloads/) 
 
 ## Getting started
 
