@@ -209,7 +209,6 @@ document.addEventListener("keyup", (event) => {
     event.preventDefault();
 
     if(event.code === "ArrowUp") {
-        console.log("moving player up!!")
         grid.movePlayer(DIRECTIONS.up);
     } else if(event.code === "ArrowDown") {
         grid.movePlayer(DIRECTIONS.down);
