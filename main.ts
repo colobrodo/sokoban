@@ -233,16 +233,6 @@ function createTile(src: string): Promise<HTMLImageElement> {
     });
 }
 
-const tiles = {
-    wall: createTile("/img/wall.png"),
-    goal: createTile("/img/goal.png"),
-    player: createTile("/img/player.png"),
-    playerOnAGoal: createTile("/img/player-on-goal.png"),
-    box: createTile("/img/box.png"),
-    boxOnGoal: createTile("/img/box-on-goal.png"),
-}
-
-
 const cellSize = 35;
 function createRenderer(tiles: { [key: string]: HTMLImageElement}) {
     return function render() {
