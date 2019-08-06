@@ -172,20 +172,7 @@ function parseLevel(level: string): Grid {
 }
 
 
-
-const simpleLevel: string = 
-`#####
-## ##
-#  .#
-#$  #
-# . #
-#   #
-#.$*#
-# $@#
-##  #
-#####`;
-let grid = parseLevel(simpleLevel);
-
+let grid: Grid;
 const canvas = <HTMLCanvasElement> document.getElementById("canvas"),
     context = canvas.getContext("2d");
 
